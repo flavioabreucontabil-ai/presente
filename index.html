@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pra você</title>
+
+<style>
+  :root{
+    --bg1:#080810;
+    --bg2:#141427;
+    --card: rgba(255,255,255,.08);
+    --card2: rgba(255,255,255,.12);
+    --text:#ffffff;
+    --muted: rgba(255,255,255,.72);
+    --accent:#ff6b8b;
+    --accent2:#ffd1dc;
+    --shadow: 0 18px 50px rgba(0,0,0,.35);
+  }
+
+  *{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family: "Segoe UI", Arial, sans-serif;
+  }
+
+  html, body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background: radial-gradient(circle at top, #242447 0%, var(--bg1) 40%, #040408 100%);
+    color:var(--text);
+  }
+
+  /* Fundo estrelado */
+  .stars {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,.95);
+    box-shadow: 0 0 10px rgba(255,255,255,.6);
+    opacity: .25;
+    animation: twinkle linear infinite;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { transform: scale(1); opacity: .18; }
+    50% { transform: scale(1.5); opacity: .9; }
+  }
+
+  .app {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+  }
+
+  .phone {
+    width: min(100%, 440px);
+    height: min(100%, 880px);
+    position: relative;
+    border-radius: 32px;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+    border: 1px solid rgba(255,255,255,.10);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(18px);
+  }
+
+  .topbar {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    padding: 14px 16px 0;
+    z-index: 4;
+  }
+
+  .progress {
+    display:flex;
+    gap:6px;
+    margin-bottom: 14px;
+  }
+
+  .seg {
+    flex:1;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.16);
+    overflow:hidden;
+  }
+
+  .seg.active::before {
+    content:"";
+    display:block;
+    height:100%;
+    width:100%;
+    background: linear-gradient(90deg, #fff, var(--accent2));
+    animation: fill 0.6s ease;
+  }
+
+  @keyframes fill {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+
+  .header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom: 8px;
+    padding: 0 2px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .track {
+    display:flex;
+    width: 500%;
+    height: 100%;
+    transition: transform .55s cubic-bezier(.22,.61,.36,1);
+  }
+
+  .page {
+    width: 20%;
+    height: 100%;
+    padding: 84px 18px 92px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 390px;
+    padding: 22px;
+    border-radius: 28px;
+    background: linear-gradient(180deg, var(--card2), var(--card));
+    border: 1px solid rgba(255,255,255,.12);
+    box-shadow: 0 12px 40px rgba(0,0,0,.22);
+    text-align:center;
+    animation: rise .55s ease;
+  }
+
+  @keyframes rise {
+    from { opacity:0; transform: translateY(14px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  .title {
+    font-size: 34px;
+    line-height: 1.05;
+    letter-spacing: .2px;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  .small {
+    font-size: 13px;
+    color: rgba(255,255,255,.68);
+  }
+
+  .heart {
+    display:inline-block;
+    margin-left: 6px;
+    animation: beat 1.2s infinite;
+    color: #ff8fab;
+  }
+
+  @keyframes beat {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+  }
+
+  .timer {
+    font-size: 28px;
+    font-weight: 700;
+    margin-top: 10px;
+    color: #fff;
+  }
+
+  .timer-label {
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+
+  .gallery {
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .photo {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    border-radius: 18px;
+    overflow:hidden;
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.06);
+    box-shadow: 0 10px 20px rgba(0,0,0,.18);
+  }
+
+  .photo img {
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+
+.photo video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+  .quote {
+    font-size: 16px;
+    line-height: 1.75;
+    color: rgba(255,255,255,.92);
+    text-align:left;
+    white-space: pre-line;
+  }
+
+  .quote strong {
+    color: #fff;
+  }
+
+  .music-box {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.10);
+  }
+
+  .music-info {
+    text-align:left;
+  }
+
+  .music-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+
+  .music-subtitle {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .btn {
+    border:none;
+    border-radius: 999px;
+    padding: 10px 16px;
+    color:#fff;
+    background: linear-gradient(135deg, #ff6b8b, #ff8fab);
+    box-shadow: 0 10px 24px rgba(255,107,139,.28);
+    cursor:pointer;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .btn:active {
+    transform: scale(.98);
+  }
+
+  .controls {
+    position:absolute;
+    left:0;
+    right:0;
+    bottom: 16px;
+    z-index: 5;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+    padding: 0 16px;
+  }
+
+  .navbtn {
+    width: 54px;
+    height: 54px;
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.08);
+    color:#fff;
+    font-size: 18px;
+    cursor:pointer;
+    backdrop-filter: blur(12px);
+  }
+
+  .musicbtn {
+    flex:1;
+    height: 54px;
+    border:none;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #ff6b8b, #ff8fab);
+    color:#fff;
+    font-weight:800;
+    font-size: 15px;
+    cursor:pointer;
+    box-shadow: 0 14px 26px rgba(255,107,139,.22);
+  }
+
+  .hint {
+    margin-top: 12px;
+    font-size: 12px;
+    color: rgba(255,255,255,.58);
+  }
+
+  .final-phrase {
+    margin-top: 16px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .sparkle {
+    position:absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.7);
+    filter: blur(1px);
+    animation: float 8s ease-in-out infinite;
+    pointer-events:none;
+  }
+
+  @keyframes float {
+    0%,100% { transform: translateY(0); opacity:.35; }
+    50% { transform: translateY(-18px); opacity:1; }
+  }
+</style>
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+
+  <div class="app">
+    <div class="phone">
+      <div class="topbar">
+        <div class="progress" id="progress"></div>
+        <div class="header">
+          <span>pra você</span>
+          <span>especial</span>
+        </div>
+      </div>
+
+      <div class="track" id="track">
+        <!-- TELA 1 -->
+        <section class="page">
+          <div class="card">
+            <div class="title">Pra você</div>
+            <div class="subtitle">tem uma coisinha aqui… <span class="heart">♥</span></div>
+            <div class="small">abre com calma</div>
+            <div class="hint">feito com carinho</div>
+          </div>
+        </section>
+
+        <!-- TELA 2 -->
+        <section class="page">
+          <div class="card">
+            <div class="title" style="font-size:30px;">Desde o dia que tudo começou…</div>
+            <div class="timer" id="timer">-- dias e -- horas</div>
+            <div class="timer-label">26 de março de 2026</div>
+            <div class="hint">o tempo ficou mais bonito</div>
+          </div>
+        </section>
+
+        <!-- TELA 3 -->
+        <section class="page">
+          <div class="card">
+            <div class="title" style="font-size:27px;">Alguns momentos nossos</div>
+            <div class="subtitle">coisas simples, mas que ficaram na memória</div>
+
+            <div class="gallery">
+              <div class="photo"><img src="foto1.jpg" alt="foto 1"></div>
+              <div class="photo"><img src="foto2.jpg" alt="foto 2"></div>
+              <div class="photo"><img src="foto3.jpg" alt="foto 3"></div>
+              <div class="photo"><img src="foto4.jpg" alt="foto 4"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TELA 4 -->
+        <section class="page">
+          <div class="card">
+            <div class="title" style="font-size:27px;">Mais um pedacinho de nós</div>
+            <div class="subtitle">e ainda tem mais coisa boa vindo</div>
+
+            <div class="gallery">
+  <div class="photo"><img src="foto5.jpg" alt="foto 5"></div>
+  <div class="photo"><img src="foto6.jpg" alt="foto 6"></div>
+  <div class="photo"><img src="foto7.jpg" alt="foto 7"></div>
+
+  <div class="photo">
+    <video src="video1.mp4" controls muted></video>
+  </div>
+</div>
+
+            <div class="hint" style="margin-top:14px;">gosto desses momentos contigo</div>
+          </div>
+        </section>
+
+        <!-- TELA 5 -->
+        <section class="page">
+          <div class="card">
+            <div class="title" style="font-size:28px;">Pra fechar</div>
+            <div class="quote">
+Em pouco tempo você se tornou muito especial pra mim.
+
+Estar com você me faz melhor e mais leve.
+Talvez eu não demonstre tudo, mas eu gosto de você — de estar perto, de te entender, de viver isso com você.
+
+Quero construir algo bonito, no nosso tempo.
+E pode ter certeza que eu tô aqui pra somar, nos momentos bons e nos difíceis.
+
+Prefiro tentar mil vezes… mas quero que seja com você.
+É você que eu quero.
+            </div>
+
+            <div class="final-phrase">Você me faz bem <span class="heart">♥</span></div>
+          </div>
+        </section>
+      </div>
+
+      <div class="controls">
+        <button class="navbtn" onclick="prev()">‹</button>
+        <button class="musicbtn" id="musicBtn" onclick="toggleMusic()">Tocar música</button>
+        <button class="navbtn" onclick="next()">›</button>
+      </div>
+    </div>
+  </div>
+
+  <audio id="music" preload="auto">
+    <source src="musica.mp3" type="audio/mpeg" />
+  </audio>
+
+<script>
+  // estrelas
+  const starsWrap = document.getElementById("stars");
+  for (let i = 0; i < 90; i++) {
+    const s = document.createElement("div");
+    s.className = "star";
+    const size = Math.random() * 2.4 + 1;
+    s.style.width = size + "px";
+    s.style.height = size + "px";
+    s.style.left = Math.random() * 100 + "%";
+    s.style.top = Math.random() * 100 + "%";
+    s.style.animationDuration = (Math.random() * 4 + 3) + "s";
+    s.style.animationDelay = (Math.random() * 5) + "s";
+    starsWrap.appendChild(s);
+  }
+
+  // brilhinhos suaves
+  for (let i = 0; i < 8; i++) {
+    const sp = document.createElement("div");
+    sp.className = "sparkle";
+    sp.style.left = Math.random() * 100 + "%";
+    sp.style.top = Math.random() * 100 + "%";
+    sp.style.animationDelay = (Math.random() * 6) + "s";
+    sp.style.animationDuration = (Math.random() * 4 + 5) + "s";
+    starsWrap.appendChild(sp);
+  }
+
+  // páginas
+  const track = document.getElementById("track");
+  const progress = document.getElementById("progress");
+  const pages = 5;
+  let index = 0;
+
+  function renderProgress() {
+    progress.innerHTML = "";
+    for (let i = 0; i < pages; i++) {
+      const seg = document.createElement("div");
+      seg.className = "seg" + (i === index ? " active" : "");
+      progress.appendChild(seg);
+    }
+  }
+
+  function updateSlide() {
+    track.style.transform = `translateX(-${index * 20}%)`;
+    renderProgress();
+  }
+
+  function next() {
+    if (index < pages - 1) {
+      index++;
+      updateSlide();
+    }
+  }
+
+  function prev() {
+    if (index > 0) {
+      index--;
+      updateSlide();
+    }
+  }
+
+  // contador
+  const startDate = new Date("2026-03-26T00:00:00");
+
+  function updateTimer() {
+    const now = new Date();
+    const diff = now - startDate;
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+
+    document.getElementById("timer").innerText = `${days} dias e ${hours} horas`;
+  }
+
+  setInterval(updateTimer, 1000);
+  updateTimer();
+
+  // música
+  const music = document.getElementById("music");
+  const musicBtn = document.getElementById("musicBtn");
+  let playing = false;
+
+  let fadeInterval = null;
+
+function fadeIn(audio, duration = 2000) {
+  clearInterval(fadeInterval);
+
+  const stepTime = 50;
+  const steps = duration / stepTime;
+  const step = 1 / steps;
+
+  audio.volume = 0;
+
+  fadeInterval = setInterval(() => {
+    if (audio.volume < 1) {
+      audio.volume = Math.min(audio.volume + step, 1);
+    } else {
+      clearInterval(fadeInterval);
+    }
+  }, stepTime);
+}
+
+function fadeOut(audio, duration = 1200) {
+  clearInterval(fadeInterval);
+
+  const stepTime = 50;
+  const steps = duration / stepTime;
+  const step = audio.volume / steps;
+
+  fadeInterval = setInterval(() => {
+    if (audio.volume > 0) {
+      audio.volume = Math.max(audio.volume - step, 0);
+    } else {
+      audio.pause();
+      clearInterval(fadeInterval);
+    }
+  }, stepTime);
+}
+
+function toggleMusic() {
+  if (playing) {
+    fadeOut(music);
+    musicBtn.textContent = "Tocar música";
+    playing = false;
+  } else {
+    music.play().then(() => {
+      fadeIn(music);
+      musicBtn.textContent = "Pausar música";
+      playing = true;
+    }).catch(() => {
+      alert("Toque novamente para iniciar a música 🎧");
+    });
+  }
+}
+
+  renderProgress();
+</script>
+</body>
+</html>
